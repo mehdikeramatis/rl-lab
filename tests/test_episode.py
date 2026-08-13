@@ -1,6 +1,8 @@
+import gymnasium as gym
 import torch
 
-from rl_lab.rollouts.episode import Episode
+from rl_lab.networks.policy import GaussianPolicy
+from rl_lab.rollouts.episode import Episode, rollout
 
 
 def test_episode():
@@ -20,3 +22,22 @@ def test_episode():
     assert episode.actions == actions
     assert episode.rewards == rewards
     assert episode.log_probs == log_probs
+
+
+def test_rollout():
+    env = gym.make("Pendulum-v1")
+
+    policy = GaussianPolicy(
+        observation_dim=3,
+        action_dim=1,
+    )
+
+    episode = rollout(env, policy)
+
+    assert isinstance(episode, Episode)
+    assert len(episode.observations) > 0
+    assert len(episode.actions) == len(episode.observations)
+    assert len(episode.rewards) == len(episode.observations)
+    assert len(episode.log_probs) == len(episode.observations)
+
+    env.close()
