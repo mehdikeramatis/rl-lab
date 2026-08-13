@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rl-lab"
+version = "0.1.0"
+description = "A reinforcement learning research and experimentation platform"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "torch",
+    "gymnasium",
+    "wandb",
+    "matplotlib",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

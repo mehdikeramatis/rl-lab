@@ -1,1 +1,28 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# macOS
 .DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Experiment outputs
+wandb/
+outputs/
+runs/
+checkpoints/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
