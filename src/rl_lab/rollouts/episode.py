@@ -34,24 +34,17 @@ def rollout(
             dtype=torch.float32,
         )
 
-        distribution = policy(observation_tensor)
+        output = policy(observation_tensor)
 
-        action_tensor = distribution.sample()
-
-        log_prob = distribution.log_prob(action_tensor).sum()
+        action_tensor = output.action
+        log_prob = output.log_prob
 
         action = action_tensor.detach().numpy()
-
-        action = np.clip(
-            action,
-            env.action_space.low,
-            env.action_space.high,
-        )
 
         next_observation, reward, terminated, truncated, _ = env.step(action)
 
         observations.append(observation_tensor)
-        actions.append(action_tensor)
+        actions.append(torch.from_numpy(action))
         rewards.append(float(reward))
         log_probs.append(log_prob)
 

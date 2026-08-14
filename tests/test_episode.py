@@ -1,7 +1,9 @@
 import gymnasium as gym
 import torch
+from wandb import env
 
 from rl_lab.networks.policy import GaussianPolicy
+from rl_lab.rollouts import episode
 from rl_lab.rollouts.episode import Episode, rollout
 
 
@@ -39,5 +41,9 @@ def test_rollout():
     assert len(episode.actions) == len(episode.observations)
     assert len(episode.rewards) == len(episode.observations)
     assert len(episode.log_probs) == len(episode.observations)
+
+    for action in episode.actions:
+        assert torch.all(action >= -2.0)
+        assert torch.all(action <= 2.0)
 
     env.close()
