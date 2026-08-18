@@ -1,35 +1,39 @@
 import torch
 
 
+
 def evaluate(
     env,
     policy,
-) -> float:
-    observation, _ = env.reset()
+    episodes: int = 10,
+) -> list[float]:
 
-    terminated = False
-    truncated = False
 
-    total_reward = 0.0
+    returns = []
 
-    while not (terminated or truncated):
-        observation_tensor = torch.tensor(
-            observation,
-            dtype=torch.float32,
-        )
+    for _ in range(episodes):
+        observation, _ = env.reset()
 
-        action_tensor = policy.deterministic_action(
-             observation_tensor)
+        terminated = False
+        truncated = False
 
-        action = action_tensor.detach().numpy()
+        total_reward = 0.0
 
-        action = action.clip(
-            env.action_space.low,
-            env.action_space.high,
-        )
+        while not (terminated or truncated):
+            observation_tensor = torch.tensor(
+                observation,
+                dtype=torch.float32,
+            )
 
-        observation, reward, terminated, truncated, _ = env.step(action)
+            action_tensor = policy.deterministic_action(
+                observation_tensor)
 
-        total_reward += float(reward)
+            action = action_tensor.detach().numpy()
 
-    return total_reward
+            observation, reward, terminated, truncated, _ = env.step(action)
+
+            total_reward += float(reward)
+
+        returns.append(total_reward)
+
+    return returns

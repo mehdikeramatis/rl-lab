@@ -13,10 +13,12 @@ def test_evaluate():
         action_scale=2.0,
     )
 
-    total_reward = evaluate(
+    returns = evaluate(
         env=env,
         policy=policy,
+        episodes=10,
     )
 
-    assert isinstance(total_reward, float)
-    assert total_reward < 0.0
+    assert len(returns) == 10
+    assert all(isinstance(value, float) for value in returns)
+    assert all(value < 0.0 for value in returns)

@@ -19,11 +19,16 @@ optimizer = torch.optim.Adam(
     lr=1e-3,
 )
 
-baseline_return = evaluate(
+baseline_returns = evaluate(
     env=env,
     policy=policy,
+    episodes=10,
 )
-print("baseline return:", baseline_return)
+baseline_mean = sum(baseline_returns) / len(baseline_returns)
+
+print("baseline returns:", baseline_returns)
+print("baseline mean:", baseline_mean)
+
 
 losses, returns = train(
     env=env,
@@ -33,8 +38,19 @@ losses, returns = train(
     gamma=0.99,
 )
 
-print("losses:", losses)
-print("returns:", returns)
+trained_returns = evaluate(
+    env=env,
+    policy=policy,
+    episodes=10,
+)
+
+trained_mean = sum(trained_returns) / len(trained_returns)
+
+print("trained returns:", trained_returns)
+print("trained mean:", trained_mean)
+
+#print("losses:", losses)
+#print("returns:", returns)
 
 window = 5
 
