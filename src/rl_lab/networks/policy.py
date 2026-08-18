@@ -67,6 +67,18 @@ class GaussianPolicy(nn.Module):
             log_prob=log_prob,
         )
 
+    def deterministic_action(
+        self,
+        observation: torch.Tensor,
+    ) -> torch.Tensor:
+        features = self.network(observation)
+
+        mean = self.mean_head(features)
+
+        return squash_action(
+            mean,
+            self.action_scale,
+        )
 
 def squash_action(
     action: torch.Tensor,

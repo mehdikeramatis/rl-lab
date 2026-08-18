@@ -37,8 +37,9 @@ def train(
     optimizer,
     episodes: int,
     gamma: float,
-) -> list[float]:
+) -> tuple[list[float], list[float]]:
     losses = []
+    returns = []
 
     for _ in range(episodes):
         episode = rollout(env, policy)
@@ -51,5 +52,6 @@ def train(
         )
 
         losses.append(loss)
-
-    return losses
+        returns.append(sum(episode.rewards))
+        
+    return losses, returns

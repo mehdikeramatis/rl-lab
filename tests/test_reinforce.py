@@ -63,7 +63,7 @@ def test_train():
         lr=1e-3,
     )
 
-    losses = train(
+    losses, returns = train(
         env=env,
         policy=policy,
         optimizer=optimizer,
@@ -73,5 +73,8 @@ def test_train():
 
     assert len(losses) == 2
     assert all(isinstance(loss, float) for loss in losses)
+    
+    assert len(returns) == 2
+    assert all(isinstance(return_val, float) for return_val in returns)
 
     env.close()
