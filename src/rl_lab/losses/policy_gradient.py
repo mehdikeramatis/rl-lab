@@ -11,4 +11,4 @@ def policy_gradient_loss(
     weighted_loss = - logprobs * discounted_returns
     
     # Return the mean loss
-    return torch.sum(weighted_loss)
+    return weighted_loss.mean()

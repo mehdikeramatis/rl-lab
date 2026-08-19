@@ -30,6 +30,7 @@ def train(
 
         losses.append(loss)
         returns.append(sum(episode.rewards))
+
         if on_episode_end is not None:
             on_episode_end(episode_index + 1)
         

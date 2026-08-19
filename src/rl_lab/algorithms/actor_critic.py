@@ -5,6 +5,7 @@ from torch.optim import Optimizer
 
 from rl_lab.losses.policy_gradient import policy_gradient_loss
 from rl_lab.networks.policy import GaussianPolicy
+from rl_lab.rollouts import episode
 from rl_lab.rollouts.actor_critic import ActorCriticEpisode
 
 
@@ -27,9 +28,14 @@ def actor_critic_update(
         next_values = value_network(next_observations)
         td_targets = rewards + gamma * (1.0 - dones) * next_values
 
-    advantages = td_targets - values
-    actor_loss = policy_gradient_loss(torch.stack(episode.log_probs), advantages.detach())
-    critic_loss = 0.5 * advantages.pow(2).mean()
+    advantages = (td_targets - values).detach()
+    actor_advantages = (advantages - advantages.mean()) / (
+        advantages.std() + 1e-8
+    )
+
+    log_probs = torch.stack(episode.log_probs)
+    actor_loss = policy_gradient_loss(log_probs, actor_advantages)
+    critic_loss = 0.5 * (td_targets - values).pow(2).mean()
 
     policy_optimizer.zero_grad()
     value_optimizer.zero_grad()

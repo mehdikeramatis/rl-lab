@@ -49,7 +49,7 @@ class GaussianPolicy(nn.Module):
 
         distribution = Normal(mean, std)
 
-        raw_action = distribution.rsample()
+        raw_action = distribution.sample()
 
         action = squash_action(
             raw_action,

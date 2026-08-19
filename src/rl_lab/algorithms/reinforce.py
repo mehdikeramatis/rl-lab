@@ -1,10 +1,13 @@
 """Update rule for the Monte-Carlo REINFORCE algorithm."""
 
+from math import gamma
+
 import torch
 from torch.optim import Optimizer
 
 from rl_lab.losses.policy_gradient import policy_gradient_loss
 from rl_lab.returns.discounted import discounted_returns
+from rl_lab.rollouts import episode
 from rl_lab.rollouts.episode import Episode
 
 
@@ -14,10 +17,12 @@ def reinforce_update(
     episode: Episode,
     gamma: float,
 ) -> float:
-    """Update a policy with uncentred discounted returns."""
-    log_probs = torch.stack(episode.log_probs)
+
+    """Update a policy with centred discounted returns."""
     returns = discounted_returns(episode.rewards, gamma)
-    loss = policy_gradient_loss(log_probs, returns)
+    weights = returns / (returns.std() + 1e-8)
+    log_probs = torch.stack(episode.log_probs)
+    loss = policy_gradient_loss(log_probs, weights)
 
     optimizer.zero_grad()
     loss.backward()
