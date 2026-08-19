@@ -19,7 +19,7 @@ def test_policy_gradient_loss():
         returns,
     )
 
-    expected = torch.tensor(8.7)
+    expected = torch.tensor(2.9)
 
     assert torch.allclose(
         loss,

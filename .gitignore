@@ -21,6 +21,7 @@ outputs/
 runs/
 checkpoints/
 experiments/results/
+experiments/archive results/
 
 # Jupyter
 .ipynb_checkpoints/

@@ -5,7 +5,6 @@ from torch.optim import Optimizer
 
 from rl_lab.losses.policy_gradient import policy_gradient_loss
 from rl_lab.networks.policy import GaussianPolicy
-from rl_lab.rollouts import episode
 from rl_lab.rollouts.actor_critic import ActorCriticEpisode
 
 
@@ -40,6 +39,8 @@ def actor_critic_update(
     policy_optimizer.zero_grad()
     value_optimizer.zero_grad()
     (actor_loss + critic_loss).backward()
+    torch.nn.utils.clip_grad_norm_(policy.parameters(), max_norm=1.0)
+    torch.nn.utils.clip_grad_norm_(value_network.parameters(), max_norm=1.0)
     policy_optimizer.step()
     value_optimizer.step()
 

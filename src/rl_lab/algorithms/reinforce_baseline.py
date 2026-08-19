@@ -4,6 +4,7 @@ import torch
 from torch.optim import Optimizer
 
 from rl_lab.losses.policy_gradient import policy_gradient_loss
+from rl_lab.networks import policy
 from rl_lab.returns.discounted import discounted_returns
 from rl_lab.rollouts.episode import Episode
 
@@ -23,6 +24,7 @@ def reinforce_baseline_update(
 
     optimizer.zero_grad()
     loss.backward()
+    torch.nn.utils.clip_grad_norm_(policy.parameters(), max_norm=1.0)
     optimizer.step()
 
     return float(loss.detach())
