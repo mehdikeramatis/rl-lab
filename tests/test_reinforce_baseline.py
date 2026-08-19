@@ -2,7 +2,7 @@ import gymnasium as gym
 import torch
 
 from rl_lab.networks.policy import GaussianPolicy
-from rl_lab.training.reinforce_baseline import reinforce_baseline_update
+from rl_lab.algorithms.reinforce_baseline import reinforce_baseline_update
 from rl_lab.rollouts.episode import rollout
 
 

@@ -3,7 +3,8 @@ import torch
 
 from rl_lab.networks.policy import GaussianPolicy
 from rl_lab.networks.value import ValueNetwork
-from rl_lab.training.actor_critic import actor_critic_update, rollout
+from rl_lab.algorithms.actor_critic import actor_critic_update
+from rl_lab.rollouts.actor_critic import rollout
 
 
 def test_actor_critic_update_changes_actor_and_critic():

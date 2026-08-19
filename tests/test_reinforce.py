@@ -3,7 +3,8 @@ import torch
 
 from rl_lab.networks.policy import GaussianPolicy
 from rl_lab.rollouts.episode import rollout
-from rl_lab.training.reinforce import reinforce_update, train
+from rl_lab.algorithms.reinforce import reinforce_update
+from rl_lab.training.reinforce import train
 
 
 def test_reinforce_update_changes_policy():
@@ -63,12 +64,14 @@ def test_train():
         lr=1e-3,
     )
 
+    completed_episodes = []
     losses, returns = train(
         env=env,
         policy=policy,
         optimizer=optimizer,
         episodes=2,
         gamma=0.99,
+        on_episode_end=completed_episodes.append,
     )
 
     assert len(losses) == 2
@@ -76,5 +79,6 @@ def test_train():
     
     assert len(returns) == 2
     assert all(isinstance(return_val, float) for return_val in returns)
+    assert completed_episodes == [1, 2]
 
     env.close()

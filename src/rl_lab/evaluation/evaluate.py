@@ -1,18 +1,23 @@
-import torch
+from collections.abc import Sequence
 
+import torch
 
 
 def evaluate(
     env,
     policy,
     episodes: int = 10,
+    seeds: Sequence[int] | None = None,
 ) -> list[float]:
-
+    """Evaluate a policy using its deterministic action for each state."""
+    if seeds is not None and len(seeds) != episodes:
+        raise ValueError("seeds must contain one seed per evaluation episode")
 
     returns = []
 
-    for _ in range(episodes):
-        observation, _ = env.reset()
+    for episode in range(episodes):
+        seed = None if seeds is None else seeds[episode]
+        observation, _ = env.reset(seed=seed)
 
         terminated = False
         truncated = False

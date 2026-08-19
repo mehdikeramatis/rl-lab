@@ -1,34 +1,10 @@
+from collections.abc import Callable
+
 import torch
 from torch.optim import Optimizer
 
-from rl_lab.losses.policy_gradient import policy_gradient_loss
-from rl_lab.returns.discounted import discounted_returns
-from rl_lab.rollouts.episode import Episode, rollout
-
-
-def reinforce_update(
-    policy: torch.nn.Module,
-    optimizer: Optimizer,
-    episode: Episode,
-    gamma: float,
-) -> float:
-    log_probs = torch.stack(episode.log_probs)
-
-    returns = discounted_returns(
-        episode.rewards,
-        gamma,
-    )
-
-    loss = policy_gradient_loss(
-        log_probs,
-        returns,
-    )
-
-    optimizer.zero_grad()
-    loss.backward()
-    optimizer.step()
-
-    return float(loss.detach())
+from rl_lab.algorithms.reinforce import reinforce_update
+from rl_lab.rollouts.episode import rollout
 
 
 def train(
@@ -37,11 +13,12 @@ def train(
     optimizer,
     episodes: int,
     gamma: float,
+    on_episode_end: Callable[[int], None] | None = None,
 ) -> tuple[list[float], list[float]]:
     losses = []
     returns = []
 
-    for _ in range(episodes):
+    for episode_index in range(episodes):
         episode = rollout(env, policy)
 
         loss = reinforce_update(
@@ -53,5 +30,7 @@ def train(
 
         losses.append(loss)
         returns.append(sum(episode.rewards))
+        if on_episode_end is not None:
+            on_episode_end(episode_index + 1)
         
     return losses, returns

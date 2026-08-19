@@ -1,4 +1,4 @@
-"""Update rule for the Monte-Carlo REINFORCE algorithm."""
+"""REINFORCE update rule with a per-episode return baseline."""
 
 import torch
 from torch.optim import Optimizer
@@ -8,16 +8,17 @@ from rl_lab.returns.discounted import discounted_returns
 from rl_lab.rollouts.episode import Episode
 
 
-def reinforce_update(
+def reinforce_baseline_update(
     policy: torch.nn.Module,
     optimizer: Optimizer,
     episode: Episode,
     gamma: float,
 ) -> float:
-    """Update a policy with uncentred discounted returns."""
+    """Update the policy using returns centred by their episode mean."""
     log_probs = torch.stack(episode.log_probs)
     returns = discounted_returns(episode.rewards, gamma)
-    loss = policy_gradient_loss(log_probs, returns)
+    advantages = returns - returns.mean()
+    loss = policy_gradient_loss(log_probs, advantages)
 
     optimizer.zero_grad()
     loss.backward()

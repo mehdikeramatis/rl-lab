@@ -20,6 +20,7 @@ wandb/
 outputs/
 runs/
 checkpoints/
+experiments/results/
 
 # Jupyter
 .ipynb_checkpoints/
