@@ -6,6 +6,16 @@ import torch
 import matplotlib.pyplot as plt
 
 
+
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+else:
+    device = torch.device("cpu")
+
+print("Using device:", device)
+
+
+
 env = make_pendulum()
 
 policy = GaussianPolicy(
@@ -22,32 +32,41 @@ optimizer = torch.optim.Adam(
 baseline_returns = evaluate(
     env=env,
     policy=policy,
-    episodes=10,
+    episodes=20,
 )
 baseline_mean = sum(baseline_returns) / len(baseline_returns)
 
-print("baseline returns:", baseline_returns)
-print("baseline mean:", baseline_mean)
+print("-" * 100)
+print("baseline returns: \n", baseline_returns)
+print("\n baseline mean:", baseline_mean)
 
 
 losses, returns = train(
     env=env,
     policy=policy,
     optimizer=optimizer,
-    episodes=100,
+    episodes=200,
     gamma=0.99,
 )
 
 trained_returns = evaluate(
     env=env,
     policy=policy,
-    episodes=10,
+    episodes=20,
 )
 
 trained_mean = sum(trained_returns) / len(trained_returns)
 
-print("trained returns:", trained_returns)
-print("trained mean:", trained_mean)
+print("-" * 100)
+print("trained returns: \n", trained_returns)
+print("\n trained mean:", trained_mean)
+print("-" * 100)
+
+
+
+improvement = trained_mean - baseline_mean
+print("improvement:", improvement)
+print("-" * 100)
 
 #print("losses:", losses)
 #print("returns:", returns)
