@@ -53,7 +53,15 @@ def train_reinforce(
     env: gym.Env, policy: GaussianPolicy, config: dict[str, Any], callback: Callable[[int], None]
 ) -> list[float]:
     optimizer = make_optimizer(policy.parameters(), config)
-    _, returns = reinforce.train(env, policy, optimizer, config["training_episodes"], config["gamma"], callback)
+    _, returns = reinforce.train(
+        env,
+        policy,
+        optimizer,
+        config["training_episodes"],
+        config["gamma"],
+        batch_size=config["batch_size"],
+        on_episode_end=callback,
+    )
     return returns
 
 
@@ -62,7 +70,13 @@ def train_reinforce_baseline(
 ) -> list[float]:
     optimizer = make_optimizer(policy.parameters(), config)
     _, returns = reinforce_baseline.train(
-        env, policy, optimizer, config["training_episodes"], config["gamma"], callback
+        env,
+        policy,
+        optimizer,
+        config["training_episodes"],
+        config["gamma"],
+        batch_size=config["batch_size"],
+        on_episode_end=callback,
     )
     return returns
 
@@ -83,14 +97,15 @@ def train_actor_critic(
         value_optimizer,
         config["training_episodes"],
         config["gamma"],
-        callback,
+        batch_size=config["batch_size"],
+        on_episode_end=callback,
     )
     return returns
 
 
 TRAINERS = {
-    #"reinforce": train_reinforce,
-    #"reinforce_baseline": train_reinforce_baseline,
+    "reinforce": train_reinforce,
+    "reinforce_baseline": train_reinforce_baseline,
     "actor_critic": train_actor_critic,
 }
 

@@ -13,6 +13,7 @@ def train(
     optimizer: Optimizer,
     episodes: int,
     gamma: float,
+    *,
     batch_size: int = 10,
     on_episode_end: Callable[[int], None] | None = None,
 ) -> tuple[list[float], list[float]]:

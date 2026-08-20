@@ -1,7 +1,8 @@
 {
   "environment_id": "Pendulum-v1",
-  "training_episodes": 500,
+  "training_episodes": 1500,
   "seeds": [0, 1, 2, 3, 4],
+  "batch_size": 10,
   "gamma": 0.99,
   "learning_rate": 0.001,
   "adam_betas": [0.9, 0.999],
