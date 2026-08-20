@@ -18,9 +18,38 @@ def reinforce_baseline_update(
     """Update the policy using returns centred by their episode mean."""
     returns = discounted_returns(episode.rewards, gamma)
     advantages = returns - returns.mean()
-    advantages = advantages / (advantages.std() + 1e-8)
     log_probs = torch.stack(episode.log_probs)
     loss = policy_gradient_loss(log_probs, advantages)
+
+    optimizer.zero_grad()
+    loss.backward()
+    torch.nn.utils.clip_grad_norm_(policy.parameters(), max_norm=1.0)
+    optimizer.step()
+
+    return float(loss.detach())
+
+
+def reinforce_baseline_batch_update(
+    policy: torch.nn.Module,
+    optimizer: Optimizer,
+    episodes: list[Episode],
+    gamma: float,
+) -> float:
+    """Update a policy once using centered returns from a batch of episodes."""
+    log_probs = []
+    returns = []
+    for episode in episodes:
+        episode_returns = discounted_returns(episode.rewards, gamma)
+        log_probs.extend(episode.log_probs)
+        returns.append(episode_returns)
+
+    returns = torch.cat(returns)
+    advantages = returns - returns.mean()
+
+    loss = policy_gradient_loss(
+        torch.stack(log_probs),
+        advantages,
+    )
 
     optimizer.zero_grad()
     loss.backward()

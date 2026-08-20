@@ -9,7 +9,7 @@
   "hidden_dim": 64,
   "training_moving_average_window": 20,
   "evaluation_interval": 50,
-  "evaluation_episodes": 5,
+  "evaluation_episodes": 10,
   "evaluation_seed_base": 10000,
   "results_path": "experiments/results/pendulum_algorithm_comparison.npz",
   "plot_path": "experiments/results/pendulum_algorithm_comparison.png"

@@ -14,7 +14,6 @@ class Episode:
     rewards: list[float]
     log_probs: list[torch.Tensor]
 
-
 def rollout(
     env: Env,
     policy: GaussianPolicy,

@@ -47,6 +47,7 @@ losses, returns = train(
     optimizer=optimizer,
     episodes=200,
     gamma=0.99,
+    batch_size=10,
 )
 
 trained_returns = evaluate(

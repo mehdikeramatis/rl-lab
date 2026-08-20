@@ -89,8 +89,8 @@ def train_actor_critic(
 
 
 TRAINERS = {
-    "reinforce": train_reinforce,
-    "reinforce_baseline": train_reinforce_baseline,
+    #"reinforce": train_reinforce,
+    #"reinforce_baseline": train_reinforce_baseline,
     "actor_critic": train_actor_critic,
 }
 

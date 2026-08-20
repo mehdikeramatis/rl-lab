@@ -19,10 +19,13 @@ def train(
     gamma: float,
     on_episode_end: Callable[[int], None] | None = None,
 ) -> tuple[list[float], list[float], list[float]]:
+
     actor_losses, critic_losses, returns = [], [], []
 
     for episode_index in range(episodes):
+
         episode = rollout(env, policy)
+
         actor_loss, critic_loss = actor_critic_update(
             policy,
             value_network,
@@ -31,9 +34,11 @@ def train(
             episode,
             gamma,
         )
+
         actor_losses.append(actor_loss)
         critic_losses.append(critic_loss)
         returns.append(sum(episode.rewards))
+
         if on_episode_end is not None:
             on_episode_end(episode_index + 1)
 
